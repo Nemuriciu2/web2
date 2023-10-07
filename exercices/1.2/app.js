@@ -13,9 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/films', filmsRouter);
-app.use('/users', usersRouter);
-
 const stats = {};
 
 app.use((req, res, next) => {
@@ -31,5 +28,8 @@ app.use((req, res, next) => {
   console.log(statsMessage);
   next();
 });
+
+app.use('/films', filmsRouter);
+app.use('/users', usersRouter);
 
 module.exports = app;
