@@ -122,12 +122,13 @@ const FILMS = [
     
     const existingFilm = FILMS.find((film) => film.id == req.params.id);
 
+    const title = req?.body?.title.length !== 0 ? req.body.title : undefined;
+    const duration = req?.body?.duration.length !== 0 ? req.body.duration : undefined;
+    const budget = req?.body?.budget.length !== 0 ? req.body.budget : undefined;
+    const link = req?.body?.link.length !== 0 ? req.body.link : undefined;
+
     // Create part because we didn't found an existing ID in our FILMS list
     if(!existingFilm){
-      const title = req?.body?.title.length !== 0 ? req.body.title : undefined;
-      const duration = req?.body?.duration.length !== 0 ? req.body.duration : undefined;
-      const budget = req?.body?.budget.length !== 0 ? req.body.budget : undefined;
-      const link = req?.body?.link.length !== 0 ? req.body.link : undefined;
 
       if(!title || !duration || !budget || !link){
         res.sendStatus(400);
@@ -147,25 +148,21 @@ const FILMS = [
 
       FILMS.push(newFilm);
       res.json(newFilm);
-    }
+    }else{
 
     // Update part because we found an ID to match with an existing ID from our FILMS list
-    const title = req?.body.title;
-    const duration = req?.body.duration;
-    const budget = req?.body.budget;
-    const link = req?.body.link;
+      if((!title && !duration && !budget && !link) || title.length === 0 || duration <= 0 || budget <= 0 || link.length === 0) return res.sendStatus(400);
 
-    if((!title && !duration && !budget && !link) || title.length === 0 || duration <= 0 || budget <= 0 || link.length === 0) return res.sendStatus(400);
+      const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
 
-    const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
+      if(foundIndex < 0) return res.sendStatus(404);
 
-    if(foundIndex < 0) return res.sendStatus(404);
+      const updatedFilm = {...FILMS[foundIndex], ...req.body};
 
-    const updatedFilm = {...FILMS[foundIndex], ...req.body};
+      FILMS[foundIndex] = updatedFilm;
 
-    FILMS[foundIndex] = updatedFilm;
-
-    res.json(updatedFilm);
+      res.json(updatedFilm);
+    }
   });
 
 module.exports = router;
