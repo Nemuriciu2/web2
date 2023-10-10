@@ -13,3 +13,26 @@ Content-Type: application/json
     "budget" : 700,
     "link" : "ManIronMan.com"
 }
+
+### modify an existing film with only the title and duration
+PATCH {{baseUrl}}/films/1
+Content-Type: application/json
+
+{
+    "title" : "SpiderMan",
+    "duration" : 200
+}
+
+### delete a film by giving the ID
+DELETE {{baseUrl}}/films/1
+
+### modify an existing film with ALL the properties OR create one with all this properties
+PUT {{baseUrl}}/films/1
+Content-Type: application/json
+
+{
+    "title" : "SuperMan",
+    "duration" : 250,
+    "budget" : 800,
+    "link" : "SuperMan.com"
+}

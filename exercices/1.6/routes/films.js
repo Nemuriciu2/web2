@@ -87,4 +87,85 @@ const FILMS = [
     res.json(newFilm);
   });
 
+  //Delete a films by his ID
+  router.delete('/:id', (req, res) => {
+    const movieId = FILMS.findIndex(films => films.id == req.params.id);
+    
+    if(movieId < 0) return res.sendStatus(404);
+
+    const itemRemovedFromFilms = FILMS.splice(movieId, 1);
+    const ItemRemoved = itemRemovedFromFilms[0];
+
+    res.json(ItemRemoved);
+  });
+
+  //Update a films with the new properties
+  router.patch('/:id', (req, res) => {
+    const title = req?.body?.title;
+    const duration = req?.body?.duration;
+
+    if((!title && !duration) || title.length === 0 || duration <= 0) return res.sendStatus(400);
+
+    const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
+
+    if(foundIndex < 0) return res.sendStatus(404);
+
+    const updatedFilm = {...FILMS[foundIndex], ...req.body};
+
+    FILMS[foundIndex] = updatedFilm;
+
+    res.json(updatedFilm);
+  });
+
+  // Update a film if all the properties are given OR create a new film if the ID given is not already used
+  router.put('/:id', (req, res) => {
+    
+    const existingFilm = FILMS.find((film) => film.id == req.params.id);
+
+    // Create part because we didn't found an existing ID in our FILMS list
+    if(!existingFilm){
+      const title = req?.body?.title.length !== 0 ? req.body.title : undefined;
+      const duration = req?.body?.duration.length !== 0 ? req.body.duration : undefined;
+      const budget = req?.body?.budget.length !== 0 ? req.body.budget : undefined;
+      const link = req?.body?.link.length !== 0 ? req.body.link : undefined;
+
+      if(!title || !duration || !budget || !link){
+        res.sendStatus(400);
+      }
+
+      const lastItemIndex = FILMS?.length !== 0 ? FILMS.length - 1 : undefined;
+      const lastID = lastItemIndex !== undefined ? FILMS[lastItemIndex]?.id : 0;
+      const nextID = lastID + 1;
+
+      const newFilm = {
+        id : nextID,
+        title : title,
+        duration : duration,
+        budget : budget,
+        link : link
+      }
+
+      FILMS.push(newFilm);
+      res.json(newFilm);
+    }
+
+    // Update part because we found an ID to match with an existing ID from our FILMS list
+    const title = req?.body.title;
+    const duration = req?.body.duration;
+    const budget = req?.body.budget;
+    const link = req?.body.link;
+
+    if((!title && !duration && !budget && !link) || title.length === 0 || duration <= 0 || budget <= 0 || link.length === 0) return res.sendStatus(400);
+
+    const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
+
+    if(foundIndex < 0) return res.sendStatus(404);
+
+    const updatedFilm = {...FILMS[foundIndex], ...req.body};
+
+    FILMS[foundIndex] = updatedFilm;
+
+    res.json(updatedFilm);
+  });
+
 module.exports = router;
