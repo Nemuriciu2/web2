@@ -147,21 +147,22 @@ const FILMS = [
       }
 
       FILMS.push(newFilm);
-      res.json(newFilm);
+      return res.json(newFilm);
     }else{
 
     // Update part because we found an ID to match with an existing ID from our FILMS list
-      if((!title && !duration && !budget && !link) || title.length === 0 || duration <= 0 || budget <= 0 || link.length === 0) return res.sendStatus(400);
 
-      const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
+    if((!title && !duration && !budget && !link) || title.length === 0 || duration <= 0 || budget <= 0 || link.length === 0) return res.sendStatus(400);
 
-      if(foundIndex < 0) return res.sendStatus(404);
+    const foundIndex = FILMS.findIndex(films => films.id == req.params.id);
 
-      const updatedFilm = {...FILMS[foundIndex], ...req.body};
+    if(foundIndex < 0) return res.sendStatus(404);
 
-      FILMS[foundIndex] = updatedFilm;
+    const updatedFilm = {...FILMS[foundIndex], ...req.body};
 
-      res.json(updatedFilm);
+    FILMS[foundIndex] = updatedFilm;
+
+    return res.json(updatedFilm);
     }
   });
 
