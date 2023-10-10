@@ -1,0 +1,15 @@
+@baseUrl = http://localhost:3000
+
+### list all films
+GET {{baseUrl}}/films
+
+### create new film
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+    "title" : "ManIronMan",
+    "duration" : 150,
+    "budget" : 700,
+    "link" : "ManIronMan.com"
+}
